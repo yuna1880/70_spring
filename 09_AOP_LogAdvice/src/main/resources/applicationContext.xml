@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+
+	<context:component-scan base-package="com.spring.biz"/>
+	
+	  
+	<!-- ===== AOP 설정(xmlns:aop 추가) ===== -->
+	<!-- *impl 클래스의 모든 메소드 실행 전에 LogAdvice.printLog() 실행 -->
+	<!-- 
+	<bean id="log" class="com.spring.biz.common.LogAdvice"/>
+	<aop:config> -->
+		<!-- advice 적용대상 : pointcut (리턴타입, 패키지명 ..는 
+							biz 하위 클래스명 Impl로 끝나는모든 것  (파라미터 값은 관계 x)-->
+	<!--  	<aop:pointcut expression="execution(* com.spring.biz..*Impl.*(..))" id="allPointcut"/>
+		<aop:aspect ref="log"> -->
+			<!-- allpointcut(execution에 적용한 메소드) 실행 전 /
+							 로그어드바이스의 printlog 를 수행하라!!!! -->
+			<!-- <aop:before pointcut-ref="allPointcut" method="printlog"/>
+		</aop:aspect>
+	</aop:config>
+	-->
+	
+	<!-- Log4jAdvice 클래스 사용해서 로그 남기기 -->
+	<bean id="log4j" class="com.spring.biz.common.Log4jAdvice"/>
+	
+	<aop:config>
+		<!-- pointcut : 핵심 관심 중 AOP 적용대상으로 선정할 메소드 지정 -->
+		<aop:pointcut expression="execution(* com.spring.biz..*Impl.*(..))" id="allPointcut"/>
+		<aop:pointcut expression="execution(* com.spring.biz..*Impl.get*(..))" id="getPointcut"/>
+		
+		
+		<!-- aspect : 적용대상(pointcut)과 적용할 횡단관심 연결 -->
+		<aop:aspect ref="after">
+			<!-- aspect : 적용대상(pointcut)과 적용할 횡단관심 연결 -->
+			<aop:before pointcut-ref="getPointcut" method="afterLogging"/>
+		</aop:aspect>
+	</aop:config>
+	
+	
+	
+	
+</beans>
