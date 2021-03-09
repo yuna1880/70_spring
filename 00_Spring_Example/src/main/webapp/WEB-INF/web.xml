@@ -22,6 +22,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
+		<!-- 서버쪽에서 읽어들일때의 순서! -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 		

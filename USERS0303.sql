@@ -25,3 +25,9 @@ COMMIT;
 -- 새로운 시퀀스는 기존 맥스 시퀀스 + 1
 SELECT NVL(MAX(SEQ),0) + 1 FROM BOARD;
 
+
+INSERT INTO BOARD (SEQ, TITLE, WRITER, CONTENT)
+VALUES (100,'txt테스트','관리자','tx테스트중');
+ROLLBACK;
+COMMIT;
+

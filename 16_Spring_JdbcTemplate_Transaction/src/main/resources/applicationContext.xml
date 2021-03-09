@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<context:component-scan base-package="com.spring.biz" />
+	
+	<!-- === Spring JDBC 관련 설정 === -->
+	<!-- DataSource 설정 -->
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+			destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="mystudy" />
+		<property name="password" value="mystudypw" />
+	</bean>
+	
+	<!-- 스프링 JDBC JdbcTemplate 객체(인스턴스) 생성 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- ======================================== -->
+	
+	<!-- 트랜잭션 관련 설정 -->
+	<!--  1번 : 스프링 제공 트랜잭션 객체 (인스턴스) 생성 
+				(JDBC에서 제공하는 DataSourceTransactionManager)
+		-->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 2.트랜잭션 어드바이스 관련 설정(xmlns:tx 추가) -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<!-- 트랜잭션 적용 제외 get으로 시작하는것은 제외 -->
+			<tx:method name="get*" read-only="true"/> 
+			<!-- 모든 메소드에 트랜잭션 적용 -->
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	
+	<!-- 3. AOP 설정을 통해 트랜잭션 적용 (어드바이저 사용) -->
+	<aop:config>
+		<!-- 모든 포인트컷에 적용... -->
+		<aop:pointcut id="txPointcut" 
+			expression="execution(* com.spring.biz..*Impl.*(..))" />
+		<!-- 어드바이저는 적용할 어드바이스 메소드를 모를 경우 적용! -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+		
+	</aop:config>
+	
+</beans>
+
+
+
+
+
+
+
+
+
