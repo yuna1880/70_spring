@@ -42,14 +42,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardVO> getBoardList(BoardVO vo) {
-		return boardDAO.getBoardList(vo);
+	public List<BoardVO> getBoardList() {
+		return boardDAO.getBoardList();
 	}
 
 	@Override
-	public List<BoardVO> getBoardList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BoardVO> getBoardList(BoardVO vo) {
+		return boardDAO.getBoardList(vo);
 	}
 
 }

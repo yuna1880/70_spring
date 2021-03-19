@@ -114,11 +114,11 @@ public class BoardController {
 	
 	//Ajax 요청을 받고 JSON 배열 데이터 리턴
 	@RequestMapping("/ajaxGetBoardList.do")
-	@ResponseBody //데이터만 응답하는 바디영역에 응답되어진다.(json으로 데이터 받을때 꼭 붙여준다)
-	public List<BoardVO> dataTransform(BoardVO vo) {
+	@ResponseBody
+	public List<BoardVO> ajaxGetBoardList(BoardVO vo) {
 		List<BoardVO> boardList = boardService.getBoardList(vo);
 		System.out.println("boardList : " + boardList);
-			
+		
 		return boardList;
 	}
 	
